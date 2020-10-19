@@ -1,0 +1,5 @@
+Generating all possible tic-tac-toe states with the help of https://github.com/Btsan/generate_tictactoe
+
+Save output to tictactoe.txt with
+
+./tictactoe > tictactoe.txt
