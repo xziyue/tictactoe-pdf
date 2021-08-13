@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage[paperwidth=8cm, paperheight=8cm, margin=2mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usepackage{pifont}
+\usepackage{newtxtext, newtxmath}
+\usepackage{fancyhdr}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+
+
+\usetikzlibrary{calc}
+
+\pagestyle{empty}
+
+\tikzset{
+  hlnode/.style={
+      alias=sourcenode,
+      append after command={
+          let     \p1 = (sourcenode.north west),
+              \p2=(sourcenode.south east),
+              \n1={\x2-\x1},
+              \n2={\y1-\y2} in
+          node [inner sep=0pt, outer sep=0pt,anchor=north west,at=(\p1)] {\hyperlink{#1}{\XeTeXLinkBox{\phantom{\rule{\n1}{\n2}}}}}
+                  % xelatex needs \XeTeXLinkBox, won't create a link unless it
+                  % finds text --- rules don't work without \XeTeXLinkBox.
+                  % Still builds correctly with pdflatex and lualatex
+    }
+  }
+}
+
+\ExplSyntaxOn
+
+\dim_new:N \g_board_line_length_dim
+\dim_gset:Nn \g_board_line_length_dim {3cm}
+
+\dim_new:N \g_board_line_spacing_dim
+\dim_gset:Nn \g_board_line_spacing_dim {1cm}
+
+\tikzset{
+  mynode/.style={
+    inner~sep=0pt,
+    outer~sep=0pt,
+    minimum~width=0.7\g_board_line_spacing_dim,
+    minimum~height=0.7\g_board_line_spacing_dim
+  }
+}
+
+\cs_set:Npn \draw_symbol:nnn #1#2#3 {
+  % get row number
+  \int_set:Nn \l_tmpa_int {2-\int_div_truncate:nn {#1}{3}}
+  % get col number
+  \int_set:Nn \l_tmpb_int {\int_mod:nn {#1}{3}}
+  % compute x location
+  \dim_set:Nn \l_tmpa_dim {\l_tmpb_int\g_board_line_spacing_dim+0.5\g_board_line_spacing_dim}
+  % compute y location
+  \dim_set:Nn \l_tmpb_dim {\l_tmpa_int\g_board_line_spacing_dim+0.5\g_board_line_spacing_dim}
+  % draw symbol
+  \node[mynode,#3] at (\dim_use:N \l_tmpa_dim, \dim_use:N \l_tmpb_dim) {#2};
+}
+
+
+% #1: x location
+% #2: y location
+% #3: jump table
+\newcommand{\drawtictactoe}[3]{
+  \clist_set:Nn \l_tmpa_clist {#1}
+  \clist_set:Nn \l_tmpb_clist {#2}
+  \prop_set_from_keyval:Nn \l_tmpa_prop {
+    #3
+  }
+  \begin{tikzpicture}
+    \draw[-] (0pt, \dim_use:N \g_board_line_spacing_dim)--
+      (\dim_use:N \g_board_line_length_dim, \dim_use:N \g_board_line_spacing_dim);
+    \draw[-] (0pt, \dim_eval:n {2.0\g_board_line_spacing_dim})--
+          (\dim_use:N \g_board_line_length_dim, \dim_eval:n {2.0\g_board_line_spacing_dim});
+    \draw[-] (\dim_use:N \g_board_line_spacing_dim, 0pt)--
+              (\dim_use:N \g_board_line_spacing_dim, \dim_use:N \g_board_line_length_dim);
+    \draw[-] (\dim_eval:n {2.0\g_board_line_spacing_dim}, 0pt)--
+                  (\dim_eval:n {2.0\g_board_line_spacing_dim}, \dim_use:N \g_board_line_length_dim);
+    \clist_map_inline:Nn \l_tmpa_clist {
+      \draw_symbol:nnn {##1} {\large\ding{53}} {}
+    }
+    \clist_map_inline:Nn \l_tmpb_clist {
+      \draw_symbol:nnn {##1} {\large\ding{109}} {}
+    }
+    \prop_map_inline:Nn \l_tmpa_prop{
+      \draw_symbol:nnn {##1}{}{hlnode=##2}
+    }
+  \end{tikzpicture}
+}
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\centering {\Large\scshape Tic-Tac-Toe} \par
+\vspace*{2em}
+\hypertarget{homepage}
+This is a PDF-based tic-tac-toe game (version 2). Start playing by clicking the
+links on the next page. Enjoy!\par
+\vspace*{2em}
+\centering \url{https://github.com/xziyue/tictactoe-pdf} \par
+\vspace*{2em}
+\centering {\Large\hyperlink{%%fp}{$\rightarrow$START}}\par
+\clearpage
+
+%%content
+\end{document}

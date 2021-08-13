@@ -8,3 +8,7 @@ Download [tic-tac-toe.pdf](./tic-tac-toe.pdf) and start playing!
 The results should be saved in `generate_tictactoe/tictactoe.txt`.
 2. Run `generate_tictactoe.py` to generate LaTeX source file `tic-tac-toe.tex`.
 3. Compile `tic-tac-toe.tex`.
+
+## Version 2
+
+I have improved the quality of AI so that the player is impossible to win. The newer version can be seen in `tic-tac-toe2.pdf`. 

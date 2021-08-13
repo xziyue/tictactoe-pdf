@@ -1,0 +1,4572 @@
+\documentclass{article}
+\usepackage[paperwidth=8cm, paperheight=8cm, margin=2mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usepackage{pifont}
+\usepackage{newtxtext, newtxmath}
+\usepackage{fancyhdr}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+
+
+\usetikzlibrary{calc}
+
+\pagestyle{empty}
+
+\tikzset{
+  hlnode/.style={
+      alias=sourcenode,
+      append after command={
+          let     \p1 = (sourcenode.north west),
+              \p2=(sourcenode.south east),
+              \n1={\x2-\x1},
+              \n2={\y1-\y2} in
+          node [inner sep=0pt, outer sep=0pt,anchor=north west,at=(\p1)] {\hyperlink{#1}{\XeTeXLinkBox{\phantom{\rule{\n1}{\n2}}}}}
+                  % xelatex needs \XeTeXLinkBox, won't create a link unless it
+                  % finds text --- rules don't work without \XeTeXLinkBox.
+                  % Still builds correctly with pdflatex and lualatex
+    }
+  }
+}
+
+\ExplSyntaxOn
+
+\dim_new:N \g_board_line_length_dim
+\dim_gset:Nn \g_board_line_length_dim {3cm}
+
+\dim_new:N \g_board_line_spacing_dim
+\dim_gset:Nn \g_board_line_spacing_dim {1cm}
+
+\tikzset{
+  mynode/.style={
+    inner~sep=0pt,
+    outer~sep=0pt,
+    minimum~width=0.7\g_board_line_spacing_dim,
+    minimum~height=0.7\g_board_line_spacing_dim
+  }
+}
+
+\cs_set:Npn \draw_symbol:nnn #1#2#3 {
+  % get row number
+  \int_set:Nn \l_tmpa_int {2-\int_div_truncate:nn {#1}{3}}
+  % get col number
+  \int_set:Nn \l_tmpb_int {\int_mod:nn {#1}{3}}
+  % compute x location
+  \dim_set:Nn \l_tmpa_dim {\l_tmpb_int\g_board_line_spacing_dim+0.5\g_board_line_spacing_dim}
+  % compute y location
+  \dim_set:Nn \l_tmpb_dim {\l_tmpa_int\g_board_line_spacing_dim+0.5\g_board_line_spacing_dim}
+  % draw symbol
+  \node[mynode,#3] at (\dim_use:N \l_tmpa_dim, \dim_use:N \l_tmpb_dim) {#2};
+}
+
+
+% #1: x location
+% #2: y location
+% #3: jump table
+\newcommand{\drawtictactoe}[3]{
+  \clist_set:Nn \l_tmpa_clist {#1}
+  \clist_set:Nn \l_tmpb_clist {#2}
+  \prop_set_from_keyval:Nn \l_tmpa_prop {
+    #3
+  }
+  \begin{tikzpicture}
+    \draw[-] (0pt, \dim_use:N \g_board_line_spacing_dim)--
+      (\dim_use:N \g_board_line_length_dim, \dim_use:N \g_board_line_spacing_dim);
+    \draw[-] (0pt, \dim_eval:n {2.0\g_board_line_spacing_dim})--
+          (\dim_use:N \g_board_line_length_dim, \dim_eval:n {2.0\g_board_line_spacing_dim});
+    \draw[-] (\dim_use:N \g_board_line_spacing_dim, 0pt)--
+              (\dim_use:N \g_board_line_spacing_dim, \dim_use:N \g_board_line_length_dim);
+    \draw[-] (\dim_eval:n {2.0\g_board_line_spacing_dim}, 0pt)--
+                  (\dim_eval:n {2.0\g_board_line_spacing_dim}, \dim_use:N \g_board_line_length_dim);
+    \clist_map_inline:Nn \l_tmpa_clist {
+      \draw_symbol:nnn {##1} {\large\ding{53}} {}
+    }
+    \clist_map_inline:Nn \l_tmpb_clist {
+      \draw_symbol:nnn {##1} {\large\ding{109}} {}
+    }
+    \prop_map_inline:Nn \l_tmpa_prop{
+      \draw_symbol:nnn {##1}{}{hlnode=##2}
+    }
+  \end{tikzpicture}
+}
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\centering {\Large\scshape Tic-Tac-Toe} \par
+\vspace*{2em}
+\hypertarget{homepage}
+This is a PDF-based tic-tac-toe game (version 2). Start playing by clicking the
+links on the next page. Enjoy!\par
+\vspace*{2em}
+\centering \url{https://github.com/xziyue/tictactoe-pdf} \par
+\vspace*{2em}
+\centering {\Large\hyperlink{state2481}{$\rightarrow$START}}\par
+\clearpage
+
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5145}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,3}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5069}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4983}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5,6,7}{2,3,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4981}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5,6}{2,3,4,8}{7=state4983}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4970}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,6,7}{2,3,4,8}{5=state4983}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4980}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5,6,8}{2,3,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4967}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,6,8}{2,3,4,7}{5=state4980}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4968}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,6}{2,3,4}{5=state4981,7=state4970,8=state4967}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5140}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,3,7}{2,4,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5054}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,6,7}{2,4,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5047}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,7,8}{2,4,5,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5049}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,7}{2,4,5}{3=state5140,6=state5054,8=state5047}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5056}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5059}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1}{2,4}{3=state5145,5=state5069,6=state4968,7=state5049,8=state5056}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4211}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3}{1,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4131}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,5}{1,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4123}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,6}{1,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4198}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,7,8}{1,4,5,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4197}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,7}{1,4,5,6}{8=state4198}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4023}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,6,7}{1,3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4106}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,7,8}{1,4,5,6}{3=state4198}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4108}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,7}{1,4,5}{3=state4197,6=state4023,8=state4106}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4118}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,8}{1,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4119}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2}{1,4}{3=state4211,5=state4131,6=state4123,7=state4108,8=state4118}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4219}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,5,7}{1,4,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4217}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,5}{1,4,6,8}{7=state4219}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4209}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,7}{1,4,6,8}{5=state4219}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4206}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,8}{1,4,6,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4207}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3}{1,4,6}{5=state4217,7=state4209,8=state4206}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5379}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,3,5}{4,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4939}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,5}{4,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4435}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,5,8}{2,4,6,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4707}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,5}{4,6,7}{1=state5379,2=state4939,8=state4435}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4426}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,7}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4425}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4696}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3}{4,6}{1=state5145,2=state4207,5=state4707,7=state4426,8=state4425}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4436}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,5}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4271}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,6,7}{2,3,4,8}{1=state4983}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4268}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,6,8}{2,3,4,7}{1=state4980}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4269}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,6}{2,3,4}{1=state4981,7=state4271,8=state4268}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4342}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,7}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5068}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5,8}{2,4,6,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4343}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,8}{2,4,7}{1=state5068,3=state4435,6=state4268}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4344}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5}{2,4}{1=state5069,3=state4436,6=state4269,7=state4342,8=state4343}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5197}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,6}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4758}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,6}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4979}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5,6}{2,3,4,7}{8=state4980}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4039}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,5,6}{1,3,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4517}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,6}{3,4,7}{1=state4979,2=state4039,8=state4268}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4499}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,6,7}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5196}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,6,8}{3,4,5,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4757}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,6,8}{3,4,5,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4504}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,6,8}{3,4,7}{1=state5196,2=state4757,5=state4268}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4505}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,6}{3,4}{1=state5197,2=state4758,5=state4517,7=state4499,8=state4504}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5057}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,7}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4129}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,5,7}{1,4,6,8}{3=state4219}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4116}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,7}{1,4,6}{3=state4209,5=state4129,8=state4106}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5193}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,7,8}{3,4,5,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4754}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,7,8}{3,4,5,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4419}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,7,8}{2,4,5,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4589}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,7,8}{4,5,6}{1=state5193,2=state4754,3=state4419}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4599}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,7}{4,6}{1=state5057,2=state4116,3=state4426,5=state4342,8=state4589}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5194}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,8}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4755}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,8}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4974}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5,8}{2,3,4,7}{6=state4980}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4264}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,7,8}{2,3,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4265}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,8}{2,3,4}{1=state4974,6=state4268,7=state4264}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4497}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,7,8}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4501}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,8}{3,4}{1=state5194,2=state4755,5=state4265,6=state4504,7=state4497}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4602}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0}{4}{1=state5059,2=state4119,3=state4696,5=state4344,6=state4505,7=state4599,8=state4501}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1533}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1451}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,5}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1443}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,6}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1364}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,5,7}{0,3,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1359}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,6,7}{0,3,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1352}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,7,8}{0,3,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1354}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,7}{0,3,4}{5=state1364,6=state1359,8=state1352}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1523}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3,6,8}{0,4,5,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1517}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3,8}{0,4,5,7}{6=state1523}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1428}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,6,8}{0,4,5,7}{3=state1523}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1516}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3,7,8}{0,4,5,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1424}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,7,8}{0,4,5,6}{3=state1516}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1425}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,8}{0,4,5}{3=state1517,6=state1428,7=state1424}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1437}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2}{0,4}{3=state1533,5=state1451,6=state1443,7=state1354,8=state1425}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1286}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1277}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,6}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1273}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,7}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1514}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3,8}{0,4,5,6}{7=state1516}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1028}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5,8}{0,2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1258}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,7,8}{0,4,5,6}{2=state1516}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1267}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,8}{0,4,6}{2=state1514,5=state1028,7=state1258}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1271}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3}{0,4}{2=state1533,5=state1286,6=state1277,7=state1273,8=state1267}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3071}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1037}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5,6}{0,2,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2901}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,6,7}{2,3,4,8}{0=state4983}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2980}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,6}{2,4,8}{0=state4981,3=state1037,7=state2901}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5070}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,5,7}{2,4,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3072}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5,7}{2,4,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2976}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,7}{2,4,8}{0=state5070,3=state3072,6=state2901}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2971}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2974}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5}{2,4}{0=state5069,3=state3071,6=state2980,7=state2976,8=state2971}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1189}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,6}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1177}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,6,7}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1262}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,6,8}{0,4,5,7}{2=state1523}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1036}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5,6,8}{0,2,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state955}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,6,8}{0,2,4,7}{3=state1036}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1174}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,6,8}{0,4,7}{2=state1428,3=state1262,5=state955}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1175}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,6}{0,4}{2=state1443,3=state1277,5=state1189,7=state1177,8=state1174}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5146}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,3,7}{2,4,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5061}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,7}{2,4,8}{3=state5146,5=state5070,6=state5054}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1439}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,7}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3056}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,6,7}{2,4,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3063}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,7}{2,4,8}{0=state5146,5=state3072,6=state3056}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5198}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,6,7}{3,4,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3403}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,6,7}{3,4,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3236}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,6,7}{4,5,8}{0=state5198,2=state3403,3=state3056}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3244}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,7}{4,8}{0=state5061,2=state1439,3=state3063,5=state2976,6=state3236}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3058}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1023}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,6,8}{0,2,4,7}{5=state1036}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2898}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,6,8}{2,3,4,7}{0=state4980}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2966}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,6,8}{2,4,7}{0=state4967,3=state1023,5=state2898}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2962}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,7,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2963}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,8}{2,4}{0=state5056,3=state3058,5=state2971,6=state2966,7=state2962}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3242}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1}{4}{0=state5059,2=state1437,3=state1271,5=state2974,6=state1175,7=state3244,8=state2963}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state849}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,5}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state841}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,6}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state837}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,7}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state826}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,6,8}{0,4,5,7}{1=state1523}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state822}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,7,8}{0,4,5,6}{1=state1516}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state823}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,8}{0,4,5}{1=state1517,6=state826,7=state822}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state835}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3}{0,4}{1=state1533,5=state849,6=state841,7=state837,8=state823}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4220}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,5}{1,4,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4135}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,5,6}{1,4,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4132}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,5}{1,4,8}{3=state4220,6=state4135,7=state4129}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3584}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3,5}{4,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2099}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,5,6}{1,4,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2847}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,5}{4,7,8}{0=state4939,1=state3584,6=state2099}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4042}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,5,6,7}{1,3,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1927}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,5,6,7}{1,3,4,8}{0=state4042}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2001}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,5,6}{1,4,8}{0=state4135,3=state2099,7=state1927}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state750}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,5,7}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2750}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,5}{4,8}{0=state4132,1=state1451,3=state2847,6=state2001,7=state750}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3402}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,6}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4040}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,5,6}{1,3,4,8}{7=state4042}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1368}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,5,6}{0,3,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2653}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,5,6}{3,4,8}{0=state4040,1=state1368,7=state1927}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4759}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,6,7}{3,4,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2643}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,6,7}{3,4,8}{0=state4759,1=state3403,5=state1927}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2634}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,6,8}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2641}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,6}{3,4}{0=state4758,1=state3402,5=state2653,7=state2643,8=state2634}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4031}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,6,7}{1,3,4,8}{5=state4042}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4121}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,7}{1,4,8}{3=state4209,5=state4129,6=state4031}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2737}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,7}{4,8}{0=state4121,1=state1439,3=state837,5=state750,6=state2643}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3399}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,8}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4199}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,8}{1,4,5,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2074}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,6,8}{1,4,5,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2819}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,8}{4,5,7}{0=state4199,1=state1517,6=state2074}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3401}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,6,8}{3,4,5,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2726}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,6,8}{4,5,7}{0=state4757,1=state3401,3=state2074}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2633}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,7,8}{3,4,5}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2723}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,8}{4,5}{0=state4755,1=state3399,3=state2819,6=state2726,7=state2633}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2735}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2}{4}{0=state4119,1=state1437,3=state835,5=state2750,6=state2641,7=state2737,8=state2723}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state274}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,5,6}{0,1,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state107}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,6,7}{0,1,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state104}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,6,8}{0,1,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state105}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,6}{0,1,4}{2=state274,7=state107,8=state104}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1033}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5,7}{0,2,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state410}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,6,7}{0,2,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state403}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,7,8}{0,2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state405}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,7}{0,2,4}{1=state1033,6=state410,8=state403}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1030}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,5,8}{0,2,4,7}{6=state1036}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state407}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,6,8}{0,2,4,7}{1=state1036}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state404}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,8}{0,2,4}{1=state1030,6=state407,7=state403}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state600}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5}{0,4}{1=state1286,2=state849,6=state105,7=state405,8=state404}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state594}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,6,7}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state591}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,6,8}{0,4,7}{1=state1262,2=state826,5=state407}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state592}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,6}{0,4}{1=state1277,2=state841,5=state105,7=state594,8=state591}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3059}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,7}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1529}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3,7}{0,4,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2093}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,5,7}{1,4,6,8}{0=state4219}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2832}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,7}{4,6,8}{0=state4209,1=state1529,5=state2093}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4437}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,5,7}{2,4,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2563}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,7}{4,6,8}{0=state4437,1=state3072,2=state2093}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2281}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,7,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2548}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,7}{4,6}{0=state4426,1=state3059,2=state2832,5=state2563,8=state2281}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4196}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,8}{1,4,5,6}{7=state4198}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2070}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,7,8}{1,4,5,6}{0=state4198}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2816}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,8}{4,5,6}{0=state4196,1=state1514,7=state2070}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2290}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2547}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,8}{4,6}{0=state4425,1=state3058,2=state2816,5=state2290,7=state2281}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2551}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3}{4}{0=state4696,1=state1271,2=state835,5=state600,6=state592,7=state2548,8=state2547}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5354}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,4}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4914}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,4}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4750}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,4}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4680}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,5}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4251}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,4,7}{1,5,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4174}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,4,7}{1,5,6,8}{3=state4251}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4000}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,4,7}{1,5,6,8}{2=state4251}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4101}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,4,5,7}{1,3,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3838}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,5,7}{1,3,6,8}{2=state4101}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3921}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,7}{1,6,8}{2=state4174,3=state4000,5=state3838}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4673}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4}{6,8}{1=state5354,2=state4914,3=state4750,5=state4680,7=state3921}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3558}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,4}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3394}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,4}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3320}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,4,5}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5120}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,4,6}{2,5,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3123}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,4,6}{2,5,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5046}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,4,5,6}{2,3,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2955}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,4,5,6}{2,3,7,8}{0=state5046}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3037}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,4,6}{2,7,8}{0=state5120,3=state3123,5=state2955}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3316}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,4}{7,8}{0=state5354,2=state3558,3=state3394,5=state3320,6=state3037}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2886}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,4}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2812}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{2,4,5}{6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2139}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,4,7}{1,5,6,8}{0=state4251}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1972}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,4,5,7}{1,3,6,8}{0=state4101}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2052}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,4,7}{1,6,8}{0=state4174,3=state2139,5=state1972}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2805}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,4}{6,8}{0=state4914,1=state3558,3=state2886,5=state2812,7=state2052}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5396}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,3,4}{5,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4956}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,3,4}{5,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4478}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,4,7}{2,5,6,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4743}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,4}{5,6,8}{1=state5396,2=state4956,7=state4478}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3121}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,3,4}{2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3601}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,3,4}{5,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2879}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,3,4}{5,6,8}{0=state4956,1=state3601,7=state2139}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2347}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,4,6}{2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2343}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,4,7}{2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2615}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,4}{5,8}{0=state4743,1=state3121,2=state2879,6=state2347,7=state2343}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state5280}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,1,4,5}{3,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4840}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,2,4,5}{3,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4582}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,5}{3,6,8}{1=state5280,2=state4840,7=state3838}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3484}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,4,5}{3,6,7,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3225}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,4,5}{3,7,8}{0=state5280,2=state3484,6=state2955}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2715}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,4,5}{3,6,8}{0=state4840,1=state3484,7=state1972}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4325}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,5,6}{2,3,7,8}{1=state5046}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3640}{\Large\scshape Tic-Tac-Toe}\\
+{\huge It's a draw!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,5,6,7}{1,2,3,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1597}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4,5,6,7}{1,2,3,8}{0=state3640}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2200}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4,5,6}{2,3,8}{0=state4325,1=state2955,7=state1597}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1746}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4,5,7}{1,3,8}{0=state3838,2=state1972,6=state1597}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2436}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4,5}{3,8}{0=state4582,1=state3225,2=state2715,6=state2200,7=state1746}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4396}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,6}{2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3026}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,4,6}{2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2249}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{4,6,7}{2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2261}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4,6}{2,8}{0=state4396,1=state3026,3=state2347,5=state2200,7=state2249}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3684}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,6,7}{1,2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3912}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,4,7}{1,5,8}{2=state4174,3=state4000,6=state3684}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1688}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,4,6,7}{1,2,5,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1893}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,4,7}{1,5,8}{0=state4000,2=state2139,6=state1688}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1627}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4,6,7}{1,2,8}{0=state3684,3=state1688,5=state1597}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1807}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4,7}{1,8}{0=state3912,2=state2052,3=state1893,5=state1746,6=state1627}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2523}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{4}{8}{0=state4673,1=state3316,2=state2805,3=state2615,5=state2436,6=state2261,7=state1807}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4519}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,6}{3,4,8}{1=state4981,2=state4040,7=state4271}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state606}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,6}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state520}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{5,6,7}{0,4,8}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2465}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{5,6}{4,8}{0=state4519,1=state1189,2=state2001,3=state606,7=state520}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4614}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,5,7}{4,6,8}{1=state5070,2=state4129,3=state4437}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2461}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{5,7}{4,8}{0=state4614,1=state2976,2=state750,3=state2563,6=state520}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3719}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{0,3,5,8}{1,2,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1650}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,6,8}{1,2,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1646}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,7,8}{1,2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1647}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{3,5,8}{1,2,4}{0=state3719,6=state1650,7=state1646}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2211}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{5,6,8}{2,4,7}{0=state4268,1=state2898,3=state1650}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2207}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{5,7,8}{2,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2208}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{5,8}{2,4}{0=state4343,1=state2971,3=state1647,6=state2211,7=state2207}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2459}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{5}{4}{0=state4344,1=state2974,2=state2750,3=state600,6=state2465,7=state2461,8=state2208}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state4507}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{0,6,7}{3,4,8}{1=state5198,2=state4759,5=state4271}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2453}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{6,7}{4,8}{0=state4507,1=state3236,2=state2643,3=state594,5=state520}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3233}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,6,8}{4,5,7}{0=state5196,2=state3401,3=state1262}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1835}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{3,6,8}{1,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state1761}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{5,6,8}{1,4,7}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2450}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{6,8}{4,7}{0=state4504,1=state3233,2=state2726,3=state1835,5=state1761}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2451}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{6}{4}{0=state4505,1=state1175,2=state2641,3=state592,5=state2465,7=state2453,8=state2450}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3398}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,2,7,8}{3,4,5,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2894}{\Large\scshape Tic-Tac-Toe}\\
+{\huge The PDF has won!}
+\end{center}
+\end{minipage}
+\drawtictactoe{1,5,7,8}{2,3,4,6}{}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state3140}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{1,7,8}{3,4,6}{0=state5193,2=state3398,5=state2894}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2722}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{2,7,8}{4,5,6}{0=state4754,1=state3398,3=state2070}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2446}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{7,8}{4,6}{0=state4589,1=state3140,2=state2722,3=state2281,5=state2207}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2448}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{7}{4}{0=state4599,1=state3244,2=state2737,3=state2548,5=state2461,6=state2453,8=state2446}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2447}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{8}{4}{0=state4501,1=state2963,2=state2723,3=state2547,5=state2208,6=state2450,7=state2446}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\begin{center}
+\begin{minipage}[t][2.5cm][t]{\linewidth}
+\begin{center}
+\hypertarget{state2481}{\Large\scshape Tic-Tac-Toe}\\
+{\huge }
+\end{center}
+\end{minipage}
+\drawtictactoe{}{}{0=state4602,1=state3242,2=state2735,3=state2551,4=state2523,5=state2459,6=state2451,7=state2448,8=state2447}
+\end{center}
+\vfill
+\begin{flushright}
+\scriptsize
+\hyperlink{homepage}{$\rightarrow$Home}
+\quad\hyperlink{state2481}{$\rightarrow$Restart}
+\end{flushright}
+\clearpage
+\end{document}
